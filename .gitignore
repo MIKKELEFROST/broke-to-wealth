@@ -1,0 +1,15 @@
+.DS_Store
+
+# Hemmeligheder
+.env
+.env.*
+
+# Python-miljø
+.venv/
+__pycache__/
+*.pyc
+
+# Tunge mediefiler / genererede outputs
+output/
+*.mp4
+*.mp3
