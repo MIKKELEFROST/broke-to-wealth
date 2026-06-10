@@ -83,16 +83,25 @@ necktie. Keep him identical every time. 16:9 horizontal composition.
 - Genereres med nano-banana i 16:9
 
 ## Beskrivelse-skabelon (pr. video)
+Rigtig YouTube-beskrivelse med SEO for øje: de første ~150 tegn vises i
+søgeresultaterne, så videoens vigtigste SØGEORD skal stå FORREST, vævet
+naturligt ind (ingen keyword-stuffing).
 ```
-<1-2 linjers hook der gentager videoens løfte>
+<2-3 linjer der åbner med videoens vigtigste søgeord og gentager løftet>
 
-In this video: <3-4 bullet-agtige linjer>
+<kort afsnit: overblik over hvad videoen gennemgår — flere søgeord naturligt indarbejdet>
+
+Chapters:
+0:00 <hook>
+M:SS <sektion>
+... (tiderne slås op i output/<slug>/words.json — find starttiden på hver sektions første ord)
 
 ⚠️ This video contains AI-assisted narration and illustrations.
 
-#money #personalfinance #wealth #financialfreedom #brokeToWealth
+#money #personalfinance #wealth #financialfreedom #brokeToWealth <+ 1-2 video-specifikke>
 ```
 **AI-disclosure:** sæt "altered/synthetic content"-flaget ved upload (YouTube-krav).
+Færdig beskrivelse + titel + tags gemmes i `output/<slug>/upload.txt` (jf. `docs/STRUKTUR.md`).
 
 ---
 
