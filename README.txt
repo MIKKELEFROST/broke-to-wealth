@@ -14,4 +14,4 @@ docs/STRUKTUR.md        → fuld struktur + konventioner
 STATUS.md               → produktions-status pr. video
 
 run.py samler selv den færdige .mp4 + thumbnail. Sidste trin = MANUEL upload til YouTube.
-Selve programmet (skill) ligger i: ~/.claude/skills/finance-yt-video/
+Selve programmet ligger i: pipeline/ (i dette repo)

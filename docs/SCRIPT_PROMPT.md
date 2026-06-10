@@ -2,7 +2,7 @@
 
 Den her genererer manuskriptet. Indsæt emnet i `{TOPIC}` og kør den (giv den til
 mig i Claude Code, eller til ChatGPT). Outputtet gemmes som ren tekst i
-`~/broke-to-wealth/scripts/<navn>.txt` og køres derefter gennem pipelinen.
+`scripts/<navn>.txt` i projektroden og køres derefter gennem pipelinen.
 
 ---
 

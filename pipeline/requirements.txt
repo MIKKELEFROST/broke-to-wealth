@@ -1,0 +1,7 @@
+# "Broke to Wealth"-pipeline — afhængigheder (versioner verificeret juni 2026).
+# Installation:  .venv/bin/pip install -r pipeline/requirements.txt
+# ffmpeg er en SYSTEM-afhængighed (ikke pip):  brew install ffmpeg
+elevenlabs==2.52.0
+google-genai==2.8.0
+python-dotenv==1.2.2
+pillow==12.2.0

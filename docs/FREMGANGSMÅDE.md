@@ -8,11 +8,11 @@ godkendelse + manuel upload); selve genereringen kører selv. "Du" = dig.
 
 ## ENGANGS — før første video
 - [ ] Køb **ElevenLabs Starter** ($5/md) → kopiér API-nøgle (Settings → API Keys)
-- [ ] Indsæt nøglen i `~/broke-to-wealth/.env` på `ELEVENLABS_API_KEY=`
-      (filen har også `GEMINI_API_KEY` + `ELEVENLABS_VOICE_ID`)
-- [ ] Opret projektets venv:
-      `python3 -m venv ~/broke-to-wealth/.venv` →
-      `~/broke-to-wealth/.venv/bin/pip install -r ~/.claude/skills/finance-yt-video/scripts/requirements.txt`
+- [ ] Indsæt nøglen i `.env` i projektroden på `ELEVENLABS_API_KEY=`
+      (filen har også `GEMINI_API_KEY` + `ELEVENLABS_VOICE_ID` — skabelon: `.env.example`)
+- [ ] Opret projektets venv (fra projektroden):
+      `python3 -m venv .venv` →
+      `.venv/bin/pip install -r pipeline/requirements.txt`
 - [ ] Installér **ffmpeg** (`brew install ffmpeg`) — bruges til at samle videoen
 - [ ] Opret **YouTube-kanal** (eget Google-login, intet link til dig/piece.dk),
       kanalnavn + logo (kan laves med nano-banana)
@@ -33,17 +33,15 @@ Claude skriver et engelsk script med:
 - **Hook i de første 5 sek.** (det afgør alt på engelsk YouTube)
 - Fortællende, voiceover-tungt (tale > 30% af tiden), original holdning
 - Længde efter mål (8-12 min ≈ 1.200-1.800 ord)
-Gemmes som `~/broke-to-wealth/scripts/<navn>.txt`. Du læser igennem og retter.
+Gemmes som `scripts/<navn>.txt` i projektroden. Du læser igennem og retter.
 
 ### 3. Kør hele flowet  *(én kommando, kører ~10-15 min selv)*
 ```
-~/broke-to-wealth/.venv/bin/python \
-  ~/.claude/skills/finance-yt-video/scripts/run.py \
-  ~/broke-to-wealth/scripts/<navn>.txt --name <navn> \
+.venv/bin/python pipeline/run.py <navn> \
   --title "How I'd go from $0 to $10k" --hook "$0 TO $10K"
 ```
 Kører alle 5 trin automatisk: voiceover → scener → billeder → **samlet .mp4** → **thumbnail**.
-Resultat i `~/broke-to-wealth/output/<navn>/`:
+Resultat i `output/<navn>/`:
 - `<navn>.mp4` — færdig video (1080p), klar til upload
 - `thumbnail.png` — YouTube-thumbnail (1280×720)
 - + `voiceover.mp3`, `scenes.json`, `images/`, `timeline.json`
@@ -73,7 +71,7 @@ Brand-defaulten er rå v1. Vil du alligevel løfte billedkvaliteten på en enkel
 2. Claude udfylder `visual`-feltet pr. scene med en KONKRET tegnebeskrivelse
    (fx "a stick man looking sadly at an empty wallet"). Tom `visual` → narrationen bruges direkte.
 3. Kør de resterende enkelt-trin: `generate_images.py → assemble_video.py → generate_thumbnail.py`
-   (se Enkelt-trin i SKILL.md).
+   (se `pipeline/README.md`).
 
 ---
 

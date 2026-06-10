@@ -10,10 +10,12 @@ Autoritativ beskrivelse af mappestruktur og konventioner. Ved tvivl: denne fil g
 | `docs/` | Projekt-dokumentation | BRAND.md, FREMGANGSMÅDE.md, SCRIPT_PROMPT.md, STRUKTUR.md (denne) |
 | `branding/` | Visuelle YouTube-assets | banner, profil, watermark (+ `_thumb` versioner), `channel-description.txt` |
 | `scripts/` | Rå manuskripter, ét pr. video | `<slug>.txt` — kun rigtige scripts, ingen placeholders |
+| `pipeline/` | Selve programmet (genopbygget juni 2026) | `run.py` + trin-moduler + `requirements.txt` + `README.md` |
 | `output/<slug>/` | Genereret video + mellemfiler | se "Output-mappe" nedenfor |
 | `website/` | Statisk blog | `build.py`, `*.html`, `style.css`, `img/`, `posts/` |
 | `STATUS.md` (rod) | Produktions-status pr. video | se `STATUS.md` |
 | `.env` (rod) | API-nøgler — **IKKE i git** | ElevenLabs + Gemini + OpenRouter (Seedance) |
+| `.env.example` (rod) | Skabelon for `.env` (committes) | nøgle-navne uden værdier + instruktioner |
 | `.venv/` (rod) | Python-miljø — **IKKE i git** | — |
 
 ## Konventionen: ét script → én output-mappe
@@ -50,6 +52,8 @@ kun scripts, docs, branding og website.
 
 ## Programmet
 
-Selve pipelinen/skill'en ligger **uden for** denne mappe i
-`~/.claude/skills/finance-yt-video/`. `run.py` samler den færdige `.mp4` + thumbnail.
-Sidste trin er altid MANUEL upload til YouTube.
+Selve pipelinen ligger i `pipeline/` **i dette repo** (flyttet ind juni 2026, efter at den
+gamle placering `~/.claude/skills/finance-yt-video/` blev slettet — koden er genopbygget
+fra output-artefakterne). `pipeline/run.py` orkestrerer alle trin og samler den færdige
+`.mp4` + thumbnail. Se `pipeline/README.md` for brug. Sidste trin er altid MANUEL upload
+til YouTube.

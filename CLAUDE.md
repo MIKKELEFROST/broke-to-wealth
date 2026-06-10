@@ -19,7 +19,8 @@ Engelsksproget indhold om penge, mindset og vaner. Ny video hver uge.
 - `.venv/` — Python-miljø — IKKE i git
 
 ## Noter
-- Selve programmet/skill'en ligger i `~/.claude/skills/finance-yt-video/` (uden for denne mappe).
+- Selve programmet ligger i `pipeline/` (i denne mappe — flyttet ind i repoet juni 2026
+  efter at den gamle placering `~/.claude/skills/finance-yt-video/` blev slettet).
 - `run.py` samler den færdige .mp4 + thumbnail. Sidste trin = MANUEL upload til YouTube.
 
 ## Konventioner

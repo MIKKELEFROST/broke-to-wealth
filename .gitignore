@@ -3,6 +3,7 @@
 # Hemmeligheder
 .env
 .env.*
+!.env.example
 
 # Python-miljø
 .venv/
