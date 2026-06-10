@@ -21,7 +21,7 @@ Manuelt vedligeholdt overblik. Opdatér når en video skrider videre.
 | made-by-ai | I Make Faceless YouTube Videos With AI | ✅ | ✅ | ✅ | ✅ | ✅ `NiL0IPPHN2U` | YouTube-titel: "...With Claude AI" |
 | debt-one-number | 6 Ways Rich People Use Debt | ✅ | ✅ | ⚠️ | ✅ | ✅ `l7dCY18IomU` | thumbnail kun 93K (vs ~750-950K) — bør regenereres |
 | ai-money-99 | 99% Don't Know How to Use AI to Make Money | ✅ | ✅ | ✅ | ✅ | ✅ (ID mangler i build.py) | live på YouTube — indsæt `video_id` i `website/build.py` + kør `build.py` |
-| compound-interest | How Compound Interest Makes the Rich Richer While You Sleep | ✅ | ❌ | ❌ | ❌ | ❌ | planlagt: søn 14/6 |
+| compound-interest | How Compound Interest Makes the Rich Richer While You Sleep | ✅ | ✅ | ✅ | ❌ | ❌ | produceret 10/6 — KLAR til upload (planlagt søn 14/6) |
 | broke-psychology | The Psychology of Being Broke | ✅ | ❌ | ❌ | ❌ | ❌ | planlagt: ons 17/6 |
 | middle-class-trap | Why the Middle Class Will Never Be Rich | ✅ | ❌ | ❌ | ❌ | ❌ | planlagt: søn 21/6 |
 | saving-wont-work | Why Saving Money Will Never Make You Rich | ✅ | ❌ | ❌ | ❌ | ❌ | planlagt: ons 24/6 |
@@ -58,5 +58,6 @@ rækkefølgen herunder (binge-loop), så behold rækkefølgen.
 - Thumbnail til debt-one-number er kun 93K — regenerér når pipelinen kører igen.
 
 **Workflow pr. video:** idé → `scripts/<slug>.txt` → kør pipeline (`run.py`) →
-`output/<slug>/<slug>.mp4` + thumbnail → upload til YouTube → indsæt `video_id` i
+`output/<slug>/<slug>.mp4` + thumbnail → skriv `output/<slug>/upload.txt` (TITEL +
+BESKRIVELSE + TAGS, jf. `docs/STRUKTUR.md`) → upload til YouTube → indsæt `video_id` i
 `website/build.py` → kør `build.py`.

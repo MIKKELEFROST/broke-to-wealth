@@ -26,12 +26,18 @@ Et manuskript i `scripts/<slug>.txt` producerer mappen `output/<slug>/`:
 output/<slug>/
 ├── <slug>.mp4        ← færdig video (manuel upload til YouTube)
 ├── thumbnail.png     ← YouTube-thumbnail (~750-950K typisk)
+├── upload.txt        ← upload-metadata: TITEL + BESKRIVELSE + TAGS (se nedenfor)
 ├── voiceover.mp3     ← stemme-track (ElevenLabs)
 ├── images/           ← scene-billeder (~50 stk pr. video)
 ├── scenes.json       ← scene-metadata
 ├── timeline.json     ← timing-data
 └── words.json        ← ord/timing-log
 ```
+
+`upload.txt` skrives sammen med videoen (copy-paste til YouTube ved upload) og har tre
+sektioner med overskrifterne `TITEL`, `BESKRIVELSE` og `TAGS`. Beskrivelsen følger
+skabelonen i `docs/BRAND.md` (hook, "In this video:"-punkter, AI-disclosure-linjen,
+hashtags); TAGS er én kommasepareret linje (~10-15 tags).
 
 Reserverede output-mapper (ikke videoer):
 - `output/_test/` — testkørsel / udvikling
