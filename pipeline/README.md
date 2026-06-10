@@ -70,6 +70,14 @@ Mangler en nøgle, stopper pipelinen med en tydelig fejl og vejledning.
 - **`generate_thumbnail.py`** — `thumbnail.png` (1280×720) i samme stil med
   STOR hook-tekst. Validerer resultatet (1280×720 og > 200 KB — en tidligere
   kørsel gav en defekt 93 KB-fil) og prøver én gang til ved fejl.
+- **`assemble_clips.py`** (eksperiment — bruges KUN på eksplicit ønske; stillbilleder
+  er kanalens foretrukne format, jf. beslutning 10/6-2026) — render-variant med ANIMEREDE klip:
+  `output/<slug>/clips/scene_NNNN.mp4` (fx Seedance image-to-video via
+  Higgsfield, startframe = scenens doodle) bruges pr. scene; mangler et klip
+  falder scenen tilbage til stillbilledet. Klip trimmes/forlænges (sidste
+  frame holdes) til scenens eksakte varighed; klip-lydspor droppes; samme
+  mp4-kontrakt som `assemble_video.py`. Først brugt: investing-vs-saving
+  (Seedance 1.5 Pro @ 480p, 2,4 credits/klip).
 - **`common.py`** — fælles hjælpere: stier (alt findes relativt til denne
   mappe), `.env`-indlæsning, atomiske skrivninger (temp-fil + rename),
   JSON-format (`indent=1`, ASCII, ingen slut-newline — matcher de gamle

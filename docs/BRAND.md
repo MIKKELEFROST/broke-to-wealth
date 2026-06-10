@@ -8,7 +8,7 @@ videoerne genkendelige og holder kanalen konsistent (og på rette side af YouTub
 
 ## Kanal-identitet
 - **Navn:** Broke to Wealth
-- **Handle:** @broketowealth  *(tjek ledighed når kanalen oprettes; alternativer: @broke2wealth, @broketowealthyt)*
+- **Handle:** @broke-to-wealth  *(det faktiske handle på den oprettede kanal)*
 - **Tagline:** "From broke to wealth — the money moves they never taught you."
 - **Sprog:** Engelsk
 - **Niche:** Finans / økonomi, AI, automation, penge-psykologi, "how to get rich" — alt samlet under penge-paraplyen (fattig → rig)

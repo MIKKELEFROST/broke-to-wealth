@@ -26,6 +26,12 @@ Manuelt vedligeholdt overblik. Opdatér når en video skrider videre.
 | middle-class-trap | Why the Middle Class Will Never Be Rich | ✅ | ❌ | ❌ | ❌ | ❌ | planlagt: søn 21/6 |
 | saving-wont-work | Why Saving Money Will Never Make You Rich | ✅ | ❌ | ❌ | ❌ | ❌ | planlagt: ons 24/6 |
 | lifestyle-creep | How Lifestyle Creep Quietly Bankrupts People | ✅ | ❌ | ❌ | ❌ | ❌ | planlagt: søn 28/6 |
+| investing-vs-saving | Saving vs. Investing: Why One Makes You Rich and One Keeps You Safe | ✅ | ✅ | ✅ | ❌ | ✅ (ID mangler i build.py) | SEEDANCE-ANIMERET (engangs-eksperiment) — uploadet 10/6; indsæt `video_id` i `website/build.py` |
+| investing-vs-saving-stills | Should You Save or Invest First? The Right Order to Build Wealth | (deler script) | ✅ | ✅ | — | ❌ | samme lyd/billeder som investing-vs-saving men EGEN titel/thumbnail/beskrivelse ("rækkefølge"-vinkel) — klassisk still-render |
+
+> **Politik (10/6-2026):** Seedance/Higgsfield-animation bruges IKKE igen, medmindre det
+> eksplicit efterspørges — stillbilleder foretrækkes. `pipeline/assemble_clips.py` beholdes
+> som mulighed.
 
 **Forklaring:** ✅ = klar · ❌ = mangler · ⚠️ = problem, se noter.
 
