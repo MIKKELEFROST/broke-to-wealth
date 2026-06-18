@@ -14,7 +14,7 @@ videoerne genkendelige og holder kanalen konsistent (og på rette side af YouTub
 - **Niche:** Finans / økonomi, AI, automation, penge-psykologi, "how to get rich" — alt samlet under penge-paraplyen (fattig → rig)
 - **Målgruppe:** 18-35, vil ud af at leve fra løn til løn, drømmer om økonomisk frihed
 - **Tone:** Direkte, fortællende, motiverende/håbefuld OG **handlingsorienteret/rådgivende** — giv konkrete trin og "gør-dette"-råd.
-  GUARDRAIL: stadig INGEN konkrete aktie/krypto-tips og INGEN garantier (beskytter monetisering). Konkret = "gør X-handlingen", ikke "invester i Y".
+  GUARDRAIL (opdateret 18/6-2026): INGEN individuelle aktie/krypto-tips og INGEN garantier (beskytter monetisering). Brede, populære indeks (S&P 500, NASDAQ 100) er OK som generel uddannelse. Tonen må gerne være stærkt optimistisk, men behold ALTID mindst én kort ærlig linje ("ikke garanteret / markedet kan falde / ikke finansiel rådgivning").
 
 ## Den faste figur (kanalens "ansigt")
 Samme tilbagevendende karakter i HVER video — krav for at overleve YouTubes
@@ -28,7 +28,8 @@ faceless-politik og det der gør kanalen genkendelig:
 - Ekstremt simpel MS Paint / barnlig doodle, tykke skæve sorte streger
 - Flade farver, ren hvid baggrund, ingen skygger/3D/cinematic
 - 16:9, masser af tom plads, ét tydeligt motiv pr. billede
-- **Energisk tempo: ~50 billeder/video, skift hvert ~4 sek.** (target 2.8/max 4.5 — v1, valgt frem for roligere)
+- **Tekst-regel:** korte labels/overskrifter OK (1-3 ord), men INGEN fulde sætninger/undertekster i billedet — voiceoveren bærer teksten (juni 2026)
+- **Roligt tempo: skift hvert ~3,5-6 sek.** (min 3.5/max 6.0 — valgt juni 2026 for et roligere essay-look). Billedantal skalerer med længden: ~0,2 billeder/sek, ~14-16 ord/billede.
 - Kør den RÅ v1: `visual`-felter udfyldes IKKE (hurtig produktion, energisk look)
 
 ## Stemme (fast)
@@ -58,12 +59,17 @@ i `generate_images.py`. Det er denne prompt der faktisk sendes til nano-banana:
 
 ```
 A crude, childlike drawing made in MS Paint illustrating this idea: {SCENE}.
+Convey the idea through the DRAWING itself, not through writing.
 STYLE RULES (must follow exactly): extremely simple beginner doodle drawn quickly
 by hand with a computer mouse; thick wobbly uneven black outlines; flat solid fill
 colors; plain pure-white background; NO shading, NO gradients, NO 3D, NO photorealism,
 NO cinematic lighting, NO fine detail. It should look like someone who is bad at
 drawing made it in 30 seconds. Clear and readable, single simple scene, lots of empty
-white space. Finance and money theme. Whenever a person appears, draw the SAME
+white space.
+TEXT RULE (critical): do NOT write the sentence, a caption or a subtitle, and do NOT
+paraphrase the narration as text. At most a FEW very short label words are allowed
+(1-3 words, e.g. one word on an object or a short contrast label) — NEVER a full sentence.
+Finance and money theme. Whenever a person appears, draw the SAME
 recurring character: a simple bald round-headed stick man wearing a small black
 necktie. Keep him identical every time. 16:9 horizontal composition.
 ```
@@ -81,6 +87,7 @@ necktie. Keep him identical every time. 16:9 horizontal composition.
 - Samme doodle-stil som videoen + den faste figur
 - STOR tekst (2-4 ord), høj kontrast, ét tydeligt motiv
 - Genereres med nano-banana i 16:9
+- **3 dynamiske A/B-thumbnails pr. video** (`thumbnail-1/2/3.png`): vinklerne udledes pr. video fra titel + manuskript (forskellige hooks/greb, INTET preset) til A/B-test; vælg den bedste ved upload
 
 ## Beskrivelse-skabelon (pr. video)
 Rigtig YouTube-beskrivelse med SEO for øje: de første ~150 tegn vises i
@@ -126,5 +133,8 @@ Færdig beskrivelse + titel + tags gemmes i `output/<slug>/upload.txt` (jf. `doc
 18. How lifestyle creep quietly bankrupts people
 19. Poor habits that feel responsible (but aren't)
 20. The mindset shift that turns broke into wealth
+21. Loud budgeting: the money trend quietly making people rich  *(2026-trend; klar A-Z, planlagt 24/6)*
+22. Money dysmorphia: why you feel broke (even when you're not)  *(2026-trend; klar A-Z, planlagt 21/6)*
+23. How $300 a month in the NASDAQ 100 quietly makes you a millionaire  *(money breakdown; klar A-Z, planlagt 5/7)*
 
 Relateret: [[faceless-youtube-finans-flow]]

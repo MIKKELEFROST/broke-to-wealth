@@ -173,6 +173,23 @@ GEMINI_IMAGE_MODELS = [
 
 _genai_client = None
 _working_model = None  # husker hvilken model der virkede, så vi ikke prøver forfra
+_working_text_model = None  # samme idé for tekst-modellen (dynamiske thumbnail-idéer)
+GEMINI_TEXT_MODELS = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.0-flash"]
+
+# Batch-tilstand: ÉT asynkront job for alle billeder = 50% rabat (op til 24t turnaround).
+# Slå fra med BTW_BATCH=0 (synkron, fuld pris, hurtigere ved hastværk).
+BATCH_IMAGES = os.environ.get("BTW_BATCH", "1") != "0"
+
+
+def _pil_from_response(response):
+    """Find første IMAGE-part i en GenerateContentResponse -> PIL-billede (ellers None).
+    Bygger selv PIL fra rå bytes (part.as_image() giver google-genai's egen type)."""
+    for part in (getattr(response, "parts", None) or []):
+        if part.inline_data is not None and part.inline_data.data:
+            from io import BytesIO
+            from PIL import Image as PILImage
+            return PILImage.open(BytesIO(part.inline_data.data))
+    return None
 
 
 def gemini_generate_image(prompt: str):
@@ -217,14 +234,10 @@ def gemini_generate_image(prompt: str):
                 continue
             raise
         # Responsen kan indeholde både TEXT- og IMAGE-parts — find billedet.
-        # NB: part.as_image() returnerer google-genai's egen Image-type (uden
-        # .convert/.resize), så vi bygger selv et PIL-billede fra de rå bytes.
-        for part in (response.parts or []):
-            if part.inline_data is not None and part.inline_data.data:
-                _working_model = model
-                from io import BytesIO
-                from PIL import Image as PILImage
-                return PILImage.open(BytesIO(part.inline_data.data))
+        img = _pil_from_response(response)
+        if img is not None:
+            _working_model = model
+            return img
         raise RuntimeError(f"Gemini-modellen {model} returnerede intet billede "
                            "(muligvis blokeret af sikkerhedsfilter) — prøv igen.")
     # En cached model kan trækkes tilbage midt i en kørsel — nulstil cachen og
@@ -234,3 +247,132 @@ def gemini_generate_image(prompt: str):
         return gemini_generate_image(prompt)
     raise RuntimeError(f"Ingen af Gemini-billedmodellerne {GEMINI_IMAGE_MODELS} "
                        f"kunne kaldes. Sidste fejl: {last_error}")
+
+
+def gemini_generate_images_batch(prompts, *, poll_interval=20, max_wait=3600, label="billeder"):
+    """Genererer mange 16:9-billeder i ÉT asynkront Batch-job (50% rabat vs. realtid).
+
+    Returnerer en liste af PIL-billeder i SAMME rækkefølge som prompts (None for
+    de billeder der fejlede — kalderen falder tilbage til synkron generering for dem).
+    Rejser ved totalt jobsvigt, så kalderen kan falde helt tilbage til synkron mode.
+    """
+    global _genai_client, _working_model
+    if not prompts:
+        return []
+    import time
+    try:
+        from google import genai
+        from google.genai import types
+    except ImportError:
+        die("Pakken 'google-genai' mangler — kør:\n"
+            f"  pip install -r {PIPELINE_DIR / 'requirements.txt'}")
+
+    if _genai_client is None:
+        require_env("GEMINI_API_KEY", "Opret en nøgle på https://aistudio.google.com/apikey")
+        _genai_client = genai.Client()
+
+    config = types.GenerateContentConfig(
+        response_modalities=["IMAGE"],
+        image_config=types.ImageConfig(aspect_ratio="16:9"),
+    )
+    src = [types.InlinedRequest(contents=[p], config=config) for p in prompts]
+
+    def _is_not_found(e):
+        try:
+            from google.genai import errors
+            if isinstance(e, errors.APIError) and getattr(e, "code", None) == 404:
+                return True
+        except ImportError:
+            pass
+        t = str(e).lower()
+        return "not_found" in t or "not found" in t or "404" in t
+
+    # Samme model-fallback som synkron: prøv cached/nyeste først, fald tilbage ved 404.
+    models = [_working_model] if _working_model else list(GEMINI_IMAGE_MODELS)
+    job = last_error = None
+    for model in models:
+        try:
+            job = _genai_client.batches.create(model=model, src=src)
+            _working_model = model
+            break
+        except Exception as e:
+            if _is_not_found(e):
+                last_error = e
+                continue
+            raise
+    if job is None:
+        raise RuntimeError(f"Kunne ikke oprette batch-job (model ikke fundet). Sidste fejl: {last_error}")
+
+    log(f"  Batch-job oprettet ({len(prompts)} {label}): {job.name}")
+    TERMINAL = {"JOB_STATE_SUCCEEDED", "JOB_STATE_FAILED", "JOB_STATE_CANCELLED",
+                "JOB_STATE_EXPIRED", "JOB_STATE_PARTIALLY_SUCCEEDED"}
+    waited = 0
+    while True:
+        state = getattr(job.state, "name", None) or str(job.state)
+        if state in TERMINAL:
+            break
+        if waited >= max_wait:
+            raise RuntimeError(f"Batch-job {job.name} blev ikke færdigt inden for {max_wait}s "
+                               f"(status: {state}). Jobbet kører videre hos Google.")
+        log(f"  Batch {label}: {state} ... ({waited}s)")
+        time.sleep(poll_interval)
+        waited += poll_interval
+        job = _genai_client.batches.get(name=job.name)
+
+    state = getattr(job.state, "name", None) or str(job.state)
+    if state in ("JOB_STATE_FAILED", "JOB_STATE_CANCELLED", "JOB_STATE_EXPIRED"):
+        raise RuntimeError(f"Batch-job {job.name} sluttede som {state}: {getattr(job, 'error', None)}")
+
+    dest = getattr(job, "dest", None)
+    responses = (getattr(dest, "inlined_responses", None) or []) if dest else []
+    images = []
+    for r in responses:
+        if getattr(r, "error", None) or getattr(r, "response", None) is None:
+            images.append(None)
+        else:
+            images.append(_pil_from_response(r.response))
+    if len(images) < len(prompts):          # manglende svar -> synkron fallback hos kalderen
+        images += [None] * (len(prompts) - len(images))
+    ok = sum(1 for i in images if i is not None)
+    log(f"  Batch {label} færdig ({state}): {ok}/{len(prompts)} billeder modtaget.")
+    return images[:len(prompts)]
+
+
+def gemini_generate_text(prompt: str, *, as_json: bool = False) -> str:
+    """Et tekst-kald til Gemini (bruges fx til dynamiske thumbnail-idéer).
+    as_json=True beder modellen om ren JSON. Falder tilbage gennem GEMINI_TEXT_MODELS
+    hvis et model-id ikke findes."""
+    global _genai_client, _working_text_model
+    try:
+        from google import genai
+        from google.genai import types
+    except ImportError:
+        die("Pakken 'google-genai' mangler — kør:\n"
+            f"  pip install -r {PIPELINE_DIR / 'requirements.txt'}")
+    if _genai_client is None:
+        require_env("GEMINI_API_KEY", "Opret en nøgle på https://aistudio.google.com/apikey")
+        _genai_client = genai.Client()
+    config = types.GenerateContentConfig(response_mime_type="application/json") if as_json else None
+
+    def _is_not_found(e):
+        t = str(e).lower()
+        return "not_found" in t or "not found" in t or "404" in t
+
+    models = [_working_text_model] if _working_text_model else list(GEMINI_TEXT_MODELS)
+    last_error = None
+    for model in models:
+        try:
+            response = _genai_client.models.generate_content(
+                model=model, contents=[prompt], config=config)
+        except Exception as e:
+            if _is_not_found(e):
+                last_error = e
+                continue
+            raise
+        _working_text_model = model
+        return response.text or ""
+    if _working_text_model is not None:   # cached model trukket tilbage -> prøv listen forfra
+        _working_text_model = None
+        return gemini_generate_text(prompt, as_json=as_json)
+    raise RuntimeError(f"Ingen af Gemini-tekstmodellerne {GEMINI_TEXT_MODELS} kunne kaldes. "
+                       f"Sidste fejl: {last_error}")

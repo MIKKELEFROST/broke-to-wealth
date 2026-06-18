@@ -23,12 +23,17 @@ DEFAULT_CHARACTER = "a simple bald round-headed stick man wearing a small black 
 # (eller et manuelt udfyldt 'visual'-felt); {CHARACTER} = DEFAULT_CHARACTER.
 MASTER_PROMPT = (
     "A crude, childlike drawing made in MS Paint illustrating this idea: {SCENE}. "
+    "Convey the idea through the DRAWING itself, not through writing. "
     "STYLE RULES (must follow exactly): extremely simple beginner doodle drawn quickly "
     "by hand with a computer mouse; thick wobbly uneven black outlines; flat solid fill "
     "colors; plain pure-white background; NO shading, NO gradients, NO 3D, NO photorealism, "
     "NO cinematic lighting, NO fine detail. It should look like someone who is bad at "
     "drawing made it in 30 seconds. Clear and readable, single simple scene, lots of empty "
-    "white space. Finance and money theme. Whenever a person appears, draw the SAME "
+    "white space. "
+    "TEXT RULE (critical): do NOT write the sentence, a caption or a subtitle, and do NOT "
+    "paraphrase the narration as text. At most a FEW very short label words are allowed "
+    "(1-3 words, e.g. one word on an object or a short contrast label) — NEVER a full sentence. "
+    "Finance and money theme. Whenever a person appears, draw the SAME "
     "recurring character: {CHARACTER}. Keep him identical every time. "
     "16:9 horizontal composition."
 )
@@ -101,15 +106,34 @@ def run(out_dir: Path, force: bool = False) -> tuple[int, int]:
     images_dir = out_dir / "images"
     images_dir.mkdir(parents=True, exist_ok=True)
 
-    generated = 0
+    # Find det der mangler (idempotent: kun manglende/forcerede regenereres).
+    pending = []
     skipped = 0
     for scene in scenes:
         path = images_dir / common.scene_filename(scene["index"], scene["start"])
         if path.exists() and not force:
             skipped += 1
-            continue  # idempotent: regenererer kun det der mangler
-        common.log(f"  [{scene['index']}/{len(scenes)}] {path.name} ...")
-        image = _generate_with_retry(build_prompt(scene), path.name)
+            continue
+        pending.append((scene, path))
+
+    # Batch: send ALLE manglende scenebilleder i ét asynkront job (50% rabat).
+    batch_images = [None] * len(pending)
+    if pending and common.BATCH_IMAGES:
+        common.log(f"  Batch: sender {len(pending)} scenebilleder i ét job (50% rabat, async)...")
+        try:
+            batch_images = common.gemini_generate_images_batch(
+                [build_prompt(s) for s, _ in pending], label="scenebilleder")
+        except SystemExit:
+            raise
+        except Exception as e:  # batch utilgængelig -> kør alt synkront
+            common.log(f"  Batch fejlede ({e}) — falder tilbage til synkron generering.")
+            batch_images = [None] * len(pending)
+
+    generated = 0
+    for (scene, path), image in zip(pending, batch_images):
+        if image is None:  # batch sprang denne over -> synkron generering (med retry)
+            common.log(f"  [{scene['index']}/{len(scenes)}] {path.name} (synkron) ...")
+            image = _generate_with_retry(build_prompt(scene), path.name)
         image = common.fit_image(image, IMG_WIDTH, IMG_HEIGHT)  # garanterer 1344x768 RGB
         common.save_png_atomic(image, path)
         generated += 1

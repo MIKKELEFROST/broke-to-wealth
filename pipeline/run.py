@@ -98,7 +98,7 @@ def main() -> None:
     timeline = out_dir / "timeline.json"
     images_dir = out_dir / "images"
     mp4_path = out_dir / f"{slug}.mp4"
-    thumb_path = out_dir / "thumbnail.png"
+    # thumbnails genereres som thumbnail-1..3.png i trin 5
 
     # Fail-fast: valider nøglerne for de trin der reelt skal køre, FØR vi
     # bruger tid/penge — i stedet for at opdage en manglende nøgle midt i kørslen.
@@ -109,7 +109,7 @@ def main() -> None:
         common.require_env("ELEVENLABS_VOICE_ID",
                            "Den faste dybe mandlige fortæller — SAMME stemme hver gang.")
     if not args.skip_images and (args.force or tts_needed or _missing_images(out_dir)
-                                 or not generate_thumbnail.thumbnail_is_healthy(thumb_path)):
+                                 or not generate_thumbnail.all_thumbnails_healthy(out_dir)):
         common.require_env("GEMINI_API_KEY",
                            "Opret en nøgle på https://aistudio.google.com/apikey")
 
@@ -129,7 +129,7 @@ def main() -> None:
         tts.run(script_path, out_dir)
 
     # ----- Trin 2: sceneopdeling (deterministisk, ud fra ord-timing) -----
-    step(2, total, "Scener (segmentering 2,8 s / 4,5 s)")
+    step(2, total, "Scener (segmentering 3,5 s / 6,0 s)")
     if not args.force and fresh(scenes, words) and fresh(timeline, words):
         common.log("  springes over — scenes.json + timeline.json er friske (brug --force for at gentage).")
     else:
@@ -157,8 +157,8 @@ def main() -> None:
 
     # ----- Trin 5: thumbnail (Gemini + validering) -----
     step(5, total, "Thumbnail (1280x720)")
-    if not args.force and generate_thumbnail.thumbnail_is_healthy(thumb_path):
-        common.log(f"  springes over — {thumb_path.name} findes og ser sund ud "
+    if not args.force and generate_thumbnail.all_thumbnails_healthy(out_dir):
+        common.log("  springes over — alle 3 thumbnail-varianter findes og ser sunde ud "
                    "(brug --force for at gentage).")
     else:
         generate_thumbnail.run(
@@ -169,7 +169,7 @@ def main() -> None:
     minutes = (time.time() - t0) / 60
     common.log(f"\nFÆRDIG på {minutes:.1f} min. Klar til MANUEL upload:")
     common.log(f"  video:     {mp4_path}")
-    common.log(f"  thumbnail: {thumb_path}")
+    common.log(f"  thumbnails: {out_dir}/thumbnail-1..3.png (vælg den bedste)")
     common.log('  Husk: "altered/synthetic content"-flag + AI-disclosure-linjen i beskrivelsen,')
     common.log("  og opdatér STATUS.md + website/build.py (video_id) efter upload.")
 

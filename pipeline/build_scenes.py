@@ -2,7 +2,7 @@
 
 Deterministisk segmentering (ingen LLM): ordene grupperes til scener ud fra
 ord-timingen alene, efter den rekonstruerede algoritme i datakontrakten §6.
-Tempo-mål fra BRAND.md: target 2,8 s / max 4,5 s pr. scene (~50 billeder/video).
+Tempo-mål fra BRAND.md: min 3,5 s / max 6,0 s pr. scene (roligt look, juni 2026).
 
 scenes.json   (kontrakt §3): {"index", "start", "end", "text", "visual"}
 timeline.json (kontrakt §4): {"file", "start", "text"} — 1:1 med scenes.json.
@@ -16,8 +16,8 @@ from pathlib import Path
 
 import common
 
-MAX_SCENE_DUR = 4.5     # sekunder — hårdt loft; klip EFTER ordet der krydser loftet
-MIN_SENTENCE_DUR = 2.8  # sekunder — min-varighed før et sætningsslut må klippe
+MAX_SCENE_DUR = 6.0     # sekunder — hårdt loft; klip EFTER ordet der krydser loftet
+MIN_SENTENCE_DUR = 3.5  # sekunder — min-varighed før et sætningsslut må klippe
 SENTENCE_END = ".?!"    # komma klipper IKKE (kontrakt §6)
 
 
@@ -26,8 +26,8 @@ def segment(words: list[dict]) -> list[list[dict]]:
 
     For hvert ord: scenens varighed = ordets end minus første ords start
     (RÅ 3-decimals tider — afrunding til 2 decimaler sker først ved skrivning).
-    Klip når varigheden når 4,5 s (forced cut), eller når ordet slutter en
-    sætning og varigheden er mindst 2,8 s. Resterende ord bliver sidste scene
+    Klip når varigheden når 6,0 s (forced cut), eller når ordet slutter en
+    sætning og varigheden er mindst 3,5 s. Resterende ord bliver sidste scene
     (må gerne være vilkårligt kort).
     """
     scenes: list[list[dict]] = []

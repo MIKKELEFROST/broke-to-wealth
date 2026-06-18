@@ -1,7 +1,7 @@
 # Pipeline — "Broke to Wealth"
 
 Laver én færdig YouTube-video ud fra et manuskript:
-`scripts/<slug>.txt` → `output/<slug>/` med `<slug>.mp4` + `thumbnail.png`
+`scripts/<slug>.txt` → `output/<slug>/` med `<slug>.mp4` + `thumbnail-1/2/3.png`
 (+ `voiceover.mp3`, `words.json`, `scenes.json`, `timeline.json`, `images/`).
 Sidste trin er ALTID manuel upload til YouTube.
 
@@ -28,7 +28,9 @@ Mangler en nøgle, stopper pipelinen med en tydelig fejl og vejledning.
 ## Brug
 
 ```bash
-# Hele kæden (voiceover -> scener -> billeder -> .mp4 -> thumbnail), ~10-15 min:
+# Hele kæden (voiceover -> scener -> billeder -> .mp4 -> 3 thumbnails). Billed-trinnene
+# kører som ÉT asynkront Gemini Batch-job (50% rabat, op til 24t turnaround — typisk
+# minutter; sæt BTW_BATCH=0 for synkront ved hastværk):
 .venv/bin/python pipeline/run.py zero-to-10k --title "How I'd go from \$0 to \$10k" --hook "\$0 TO \$10K"
 
 # --title/--hook kan udelades — så gættes de ud fra slug'en.
@@ -56,20 +58,22 @@ Mangler en nøgle, stopper pipelinen med en tydelig fejl og vejledning.
   karakter-timing til ord; lange manuskripter chunkes automatisk på
   sætningsgrænser (modelgrænse ~10.000 tegn).
 - **`build_scenes.py`** — deterministisk segmentering af `words.json` til
-  scener: klip ved sætningsslut efter ≥ 2,8 s, hårdt loft ved 4,5 s (≈ ét
-  billede hvert ~4. sekund, ~50 pr. video). Skriver `scenes.json` (med tomt
-  `visual`-felt) + `timeline.json` (filnavn `scene_NNNN_tSS.SSs.png` + start).
+  scener: klip ved sætningsslut efter ≥ 3,5 s, hårdt loft ved 6,0 s (≈ ét
+  billede hvert ~5. sekund; antal skalerer med længden, ~0,2/sek). Skriver `scenes.json`
+  (med tomt `visual`-felt) + `timeline.json` (filnavn `scene_NNNN_tSS.SSs.png` + start).
 - **`generate_images.py`** — ét doodle-billede pr. scene via Gemini
-  ("nano-banana") med master-prompten fra `docs/BRAND.md`; den faste figur er
-  konstanten `DEFAULT_CHARACTER` (skift kun dér). Normaliserer output til
-  1344×768 PNG RGB. Idempotent: genererer kun manglende filer.
+  ("nano-banana", `gemini-3.1-flash-image`) med master-prompten fra `docs/BRAND.md`;
+  den faste figur er konstanten `DEFAULT_CHARACTER` (skift kun dér). Normaliserer output
+  til 1344×768 PNG RGB. Sender alle manglende billeder i ÉT Batch-job (synkron fallback
+  pr. billede). Idempotent: genererer kun manglende filer.
 - **`assemble_video.py`** — ffmpeg-render: stillbilleder efter `timeline.json`
   + `voiceover.mp3` → `<slug>.mp4` (1920×1080, H.264 High@4.0, yuv420p,
   24 fps, AAC mono 160 kbps, `-shortest`). Manglende billeder = højlydt fejl;
   `--reuse-previous` genbruger forrige billede eksplicit i stedet.
-- **`generate_thumbnail.py`** — `thumbnail.png` (1280×720) i samme stil med
-  STOR hook-tekst. Validerer resultatet (1280×720 og > 200 KB — en tidligere
-  kørsel gav en defekt 93 KB-fil) og prøver én gang til ved fejl.
+- **`generate_thumbnail.py`** — `thumbnail-1/2/3.png` (1280×720, 3 varianter at
+  vælge imellem) i samme stil med STOR hook-tekst. Batch + synkron fallback.
+  Validerer hver (1280×720 og > 200 KB — en tidligere kørsel gav en defekt
+  93 KB-fil) og prøver én gang til ved fejl.
 - **`assemble_clips.py`** (eksperiment — bruges KUN på eksplicit ønske; stillbilleder
   er kanalens foretrukne format, jf. beslutning 10/6-2026) — render-variant med ANIMEREDE klip:
   `output/<slug>/clips/scene_NNNN.mp4` (fx Seedance image-to-video via
