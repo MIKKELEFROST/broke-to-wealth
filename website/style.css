@@ -21,6 +21,8 @@ header.site{border-bottom:3px solid var(--ink);background:#fff;position:sticky;t
 .nav a.navlink{color:var(--ink);font-weight:700;margin-left:18px;font-size:15px}
 .yt{background:var(--ink);color:#fff !important;padding:8px 14px;border-radius:8px;font-weight:800;font-size:14px}
 .yt:hover{background:var(--green);text-decoration:none}
+.fb{background:#1877F2;color:#fff !important;padding:8px 14px;border-radius:8px;font-weight:800;font-size:14px;margin-left:10px}
+.fb:hover{background:#0e5fcc;text-decoration:none}
 
 /* Hero */
 .hero{text-align:center;padding:54px 20px 30px}

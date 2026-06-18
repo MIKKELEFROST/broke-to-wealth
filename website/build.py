@@ -6,6 +6,7 @@ Tilføj nye indlæg ved at tilføje en dict i POSTS og køre igen.
 from pathlib import Path
 
 CHANNEL = "https://www.youtube.com/@broke-to-wealth"
+FACEBOOK = "https://www.facebook.com/broke.to.wealth"
 SITE = Path(__file__).resolve().parent
 
 # ── Indlæg ─────────────────────────────────────────────────────────────
@@ -127,12 +128,12 @@ def head(title, desc, rel=""):
 <header class="site"><div class="nav">
 <a class="brand" href="{rel}index.html"><img src="{rel}img/logo.png" alt="Broke to Wealth"><span><span class="b">Broke to</span> <span class="k">Wealth</span></span></a>
 <nav><a class="navlink" href="{rel}index.html">Blog</a><a class="navlink" href="{rel}about.html">About</a>
-<a class="yt" href="{CHANNEL}" target="_blank" rel="noopener">▶ YouTube</a></nav>
+<a class="yt" href="{CHANNEL}" target="_blank" rel="noopener">▶ YouTube</a><a class="fb" href="{FACEBOOK}" target="_blank" rel="noopener">f Facebook</a></nav>
 </div></header>"""
 
 def footer(rel=""):
     return f"""<footer class="site"><div class="wrap">
-<p><b>Broke to Wealth</b> · <a href="{CHANNEL}" target="_blank" rel="noopener">YouTube</a> · <a href="{rel}about.html">About</a></p>
+<p><b>Broke to Wealth</b> · <a href="{CHANNEL}" target="_blank" rel="noopener">YouTube</a> · <a href="{FACEBOOK}" target="_blank" rel="noopener">Facebook</a> · <a href="{rel}about.html">About</a></p>
 <p class="disc">Broke to Wealth is educational content, not financial advice. Videos contain AI-assisted narration and illustrations. Do your own research before making money decisions.</p>
 </div></footer></body></html>"""
 
