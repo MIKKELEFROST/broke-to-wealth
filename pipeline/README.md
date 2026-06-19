@@ -87,6 +87,14 @@ Mangler en nøgle, stopper pipelinen med en tydelig fejl og vejledning.
   JSON-format (`indent=1`, ASCII, ingen slut-newline — matcher de gamle
   output-filer 1:1), scene-filnavnsformlen og Gemini-billedkaldet med
   model-fallback.
+- **`make_fb_clip.py`** (cross-posting, standalone) — bygger et lodret **9:16-teaser-klip**
+  ud fra en færdig 16:9-video + `words.json`: hvid brand-baggrund, centreret video-panel,
+  indbrændte undertekster (PNG-overlays via PIL — vigtigt for lydløst autoplay), rød CTA
+  + end-card mod YouTube. To platform-varianter med hver sin output-mappe og prefix:
+  `facebook` → `output/<slug>/facebook/fb_<slug>.mp4`, `shorts` →
+  `output/<slug>/shorts/short_<slug>.mp4`. Kræver `Pillow` + macOS-systemfonte (Arial Black/Bold).
+  Brug: `python3 pipeline/make_fb_clip.py <slug> [cut_end_sek] [facebook|shorts]`.
+  Uafhængig af `run.py` — rører ikke hovedpipelinen.
 
 ## Noter
 

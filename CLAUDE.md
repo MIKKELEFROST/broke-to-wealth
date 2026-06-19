@@ -12,8 +12,9 @@ Engelsksproget indhold om penge, mindset og vaner. Ny video hver uge.
 - `docs/STRUKTUR.md` — autoritativ beskrivelse af mappestruktur + konventioner
 - `branding/` — banner, profil, watermark, kanalbeskrivelse
 - `scripts/` — manuskripter (.txt), ét pr. video
-- `output/<navn>/` — færdig video: `<navn>.mp4` + `thumbnail.png` + `voiceover.mp3` + `images/`
-  (`_test` = testkørsel, `seedance-tests` = video-eksperimenter)
+- `output/<navn>/` — færdig video: `<navn>.mp4` + `thumbnail-1..3.png` + `voiceover.mp3` + `images/`
+  (valgfrit `facebook/` + `shorts/` 9:16-teasere fra `pipeline/make_fb_clip.py`;
+  `_test` = testkørsel, `seedance-tests` = video-eksperimenter)
 - `website/` — statisk blog; `build.py` genererer index/about/posts
 - `.env` — API-nøgler (ElevenLabs + Gemini; OpenRouter til Seedance) — IKKE i git
 - `.venv/` — Python-miljø — IKKE i git
