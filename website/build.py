@@ -79,7 +79,7 @@ POSTS = [
  {
   "slug":"how-to-actually-use-ai-to-make-money",
   "title":"99% of People Don't Know How to Actually Use AI to Make Money",
-  "video_id":"",
+  "video_id":"tTbZeiEH0mw",
   "img":"ai-money-99.png",
   "date":"Episode 3",
   "excerpt":"Most people use AI like a toy. A tiny group uses the exact same tool to make money. Here's the one shift between them.",
@@ -134,6 +134,86 @@ POSTS = [
 <li><b>Your cost of money.</b> A better borrowing reputation lowers the rent on every loan for life.</li>
 </ul>
 <p>The poor pay debt off as fast as they can. The rich ask what the spread is and how many dollars they can control. Same loans, same rates, one number.</p>
+"""
+ },
+ {
+  "slug":"saving-vs-investing",
+  "title":"Saving vs. Investing: Why One Makes You Rich and One Keeps You Safe",
+  "video_id":"nlJqjvWWzJA",
+  "img":"saving-vs-investing.png",
+  "date":"Episode 6",
+  "excerpt":"Two people save the exact same $100 a month for 20 years. One walks away with double the other — not from working harder, but from where the money lived.",
+  "body":"""
+<p>You and a friend each put away $100 a month. Same income, same discipline, same twenty years. At the end, your friend walks away with more than double your money — not because they worked harder, but because their money lived in a different place.</p>
+<h2>Your money lives in a vault or a field</h2>
+<p>A <b>vault</b> is your savings account: money goes in, sits still, stays safe. A <b>field</b> is investing: money goes in, gets planted, and grows into something bigger. Both feel responsible. Only one keeps up with the world.</p>
+<ul>
+<li><b>The vault leaks.</b> It pays 1–2% interest while inflation raises the price of everything by 2–3%+ a year. The number on screen never drops, but what it can buy shrinks every year.</li>
+<li><b>The field grows — bumpily.</b> Investing means owning things that grow: pieces of businesses, assets that produce value while you sleep. Historically ~7–10% a year on average, but never in a straight line. The bumpiness is the price of admission.</li>
+</ul>
+<h2>Same sacrifice, very different result</h2>
+<p>$100 a month for twenty years lands around <b>$26,000</b> in the vault versus roughly <b>$59,000</b> in the field. Stretch it to thirty years and the gap becomes a canyon: about <b>$45,000</b> versus <b>$150,000</b>. That isn't a detail — it's a different life.</p>
+<h2>Vault, then field — in that order</h2>
+<ul>
+<li><b>Fill the vault first.</b> Three to six months of expenses. This is your oxygen — it's allowed to leak, because its job is to keep you from selling investments in a storm.</li>
+<li><b>Short-term money stays in the vault.</b> Anything you'll need within five years — a deposit, a car, a wedding — is too soon for the field's bumps.</li>
+<li><b>Long-term money goes in the field.</b> Every dollar you won't need for five, ten, twenty years is where time smooths the bumps and compounding does the heavy lifting.</li>
+</ul>
+<p>So look at each dollar and ask one question: when will I need you? Soon means vault. Not for years means field. Savers protect money and investors grow money — wealthy people do both, in exactly that order.</p>
+"""
+ },
+ {
+  "slug":"how-compound-interest-makes-you-rich",
+  "title":"How Compound Interest Makes the Rich Richer While You Sleep",
+  "video_id":"7yFX_k3jpYk",
+  "img":"compound-interest.png",
+  "date":"Episode 7",
+  "excerpt":"The same force that quietly builds wealthy fortunes is working on you right now — except for most people, it's running in reverse.",
+  "body":"""
+<p>Last night, while you slept, the richest families on earth got a little richer — no meetings, no work. Their money grew in the dark by itself. The uncomfortable part: the exact same force is working on you right now. For most people, it's just running in reverse.</p>
+<h2>Money that earns money</h2>
+<p>Compound interest is a snowball at the top of a hill. One small push and it's pathetic — but every layer of snow helps it grab even more. The bigger it gets, the faster it grows. Money earns money, and then that new money earns money too.</p>
+<h2>The penny that doubles</h2>
+<p>Would you rather have $1,000,000 today, or a penny that doubles every day for thirty days? The penny wins — barely $5 after ten days, around $5,000 after twenty, then it goes vertical to <b>over $5 million</b> by day thirty. The growth is back-loaded: the beginning feels like nothing, the end feels like magic, and the only thing between them is time.</p>
+<h2>The boring middle</h2>
+<p>Most people never feel the magic — not because the math stops, but because the early years are dull. The line barely moves, friends are buying new cars, and people quit in the flat part of the curve that exists purely to test them. The wealthy don't quit there, because they've seen the steep end of the hill.</p>
+<h2>The rule of 72</h2>
+<p>Divide 72 by a yearly growth rate to see how long it takes to double. At 7% a year, money doubles roughly every decade. But flip it over: a credit card at 24% doubles the <i>debt</i> in about three years. Same force, opposite direction — carry expensive debt and you're the snowball, rolling downhill for someone else.</p>
+<h2>The playbook</h2>
+<ul>
+<li><b>Get off the paying side first.</b> Killing 20%-a-year debt is like earning 20% guaranteed, tax-free.</li>
+<li><b>Start now, even if it's tiny.</b> Time is the magic ingredient, and it's the one thing you can't buy later.</li>
+<li><b>Automate it, then leave it alone.</b> Every dollar you pull out also takes every future double that dollar would have made.</li>
+<li><b>Make peace with the boring middle.</b> Flat, flat, flat, then vertical. The dull years are the price of admission everyone pays.</li>
+</ul>
+<p>The rich aren't richer just because they work harder — their money works the night shift. Yours could too. The best day to push the snowball was years ago; the second best is the next time you get paid.</p>
+"""
+ },
+ {
+  "slug":"money-dysmorphia-why-you-feel-broke",
+  "title":"Money Dysmorphia: Why You Feel Broke (Even When You're Not)",
+  "video_id":"sAitAAVrpys",
+  "img":"money-dysmorphia.png",
+  "date":"Episode 8",
+  "excerpt":"You can have money in the bank and still feel broke. There's a name for that broken feeling now — and it's quietly costing you.",
+  "body":"""
+<p>You can have money in the bank and still feel broke — actually anxious, actually convinced everyone your age is sprinting ahead. You check the account, the number is fine, and the panic doesn't go away. Study after study finds the same thing: most people who feel like they're drowning aren't. Their numbers are fine. Their feeling is broken.</p>
+<h2>A broken lens, not a broken account</h2>
+<p>You've heard of body dysmorphia — someone sees a body in the mirror that isn't really there, because the problem is the lens, not the body. <b>Money dysmorphia</b> is the same trick aimed at your bank account. You don't see the real number; you see a feeling. More than eight in ten people who have it say they feel behind everyone around them — even when those people are just as scared, faking it just as hard.</p>
+<h2>The comparison machine</h2>
+<p>Every day you scroll past a highlight reel: the beach, the new car, the first home. Your brain takes someone's best day and compares it to your average Tuesday. Nobody posts the loan bolted to the car or the statement under the vacation photo. You're measuring your full, messy reality against everyone else's best three seconds — the game is rigged before you open your eyes.</p>
+<h2>It cuts both ways</h2>
+<ul>
+<li><b>Gauge stuck on empty.</b> People with real savings still feel one bad week from disaster, so they never invest, flinch at every purchase, and hoard out of fear — anxiety wearing the costume of discipline.</li>
+<li><b>Gauge stuck on full.</b> Others feel rich while the card balance climbs and the future empties behind them. They feel wealthy precisely because they're spending like it.</li>
+</ul>
+<h2>Three moves to read the real dial</h2>
+<ul>
+<li><b>Turn the feeling into a number.</b> Write down what you have, what you owe, what comes in and goes out. Fog is terrifying because it has no edges — give it edges. Nine times out of ten the real number is less scary than the feeling.</li>
+<li><b>Cut the comparison feed.</b> Your social feed is a broken scale you step on fifty times a day. Each time you feel the stab of being behind, name it: that's a trailer, not the movie.</li>
+<li><b>Pick a scoreboard you can win.</b> There will always be someone richer. Stop racing strangers and race past-you: are you saving a little more, owing a little less, panicking a little slower than a year ago?</li>
+</ul>
+<p>The feeling of being behind is a symptom, not evidence. Your account has a real number and your anxiety has a different one — and most people spend years trusting the wrong one. You might be doing far better than you feel.</p>
 """
  },
 ]
