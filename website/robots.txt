@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://broke-to-wealth.onlinemarketing.nu/sitemap.xml

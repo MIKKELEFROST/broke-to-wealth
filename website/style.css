@@ -32,15 +32,13 @@ header.site{border-bottom:3px solid var(--ink);background:#fff;position:sticky;t
 .hero p.tag{font-size:19px;color:var(--muted);margin-top:10px;font-weight:600}
 .hero p.intro{max-width:600px;margin:16px auto 0;color:#444}
 
-/* Newsletter */
-.news{background:var(--ink);color:#fff;border-radius:16px;padding:26px;margin:30px auto;max-width:680px;text-align:center}
-.news h3{font-size:22px;font-weight:900;margin-bottom:6px}
-.news p{color:#cfcfcf;font-size:15px;margin-bottom:16px}
-.news form{display:flex;gap:8px;max-width:440px;margin:0 auto;flex-wrap:wrap;justify-content:center}
-.news input{flex:1;min-width:200px;padding:13px 14px;border:none;border-radius:9px;font-size:15px}
-.news button{background:var(--green);color:#fff;border:none;padding:13px 22px;border-radius:9px;font-weight:800;font-size:15px;cursor:pointer}
-.news button:hover{background:var(--green-d)}
-.news small{display:block;color:#999;margin-top:10px;font-size:12px}
+/* YouTube subscribe CTA */
+.sub{background:var(--ink);color:#fff;border-radius:16px;padding:30px 26px;margin:30px auto;max-width:680px;text-align:center}
+.sub h3{font-size:23px;font-weight:900;margin-bottom:8px}
+.sub p{color:#cfcfcf;font-size:15px;margin-bottom:18px;max-width:480px;margin-left:auto;margin-right:auto}
+.btn-yt{display:inline-block;background:#ff0033;color:#fff !important;padding:14px 28px;border-radius:10px;font-weight:900;font-size:16px}
+.btn-yt:hover{background:#cc0029;text-decoration:none}
+.sub small{display:block;color:#999;margin-top:12px;font-size:12px}
 
 /* Post list */
 .section-title{font-size:14px;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin:38px 0 16px}

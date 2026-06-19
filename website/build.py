@@ -3,11 +3,32 @@
 Kør: python3 build.py  →  genererer index.html, about.html, posts/*.html
 Tilføj nye indlæg ved at tilføje en dict i POSTS og køre igen.
 """
+import html, json
 from pathlib import Path
 
 CHANNEL = "https://www.youtube.com/@broke-to-wealth"
 FACEBOOK = "https://www.facebook.com/broke.to.wealth"
+SITE_URL = "https://broke-to-wealth.onlinemarketing.nu"
+SUB = CHANNEL + "?sub_confirmation=1"   # åbner abonner-dialogen direkte
 SITE = Path(__file__).resolve().parent
+
+def esc(s):
+    """HTML-escape til attributter (title/description/Open Graph)."""
+    return html.escape(str(s), quote=True)
+
+# Organisation-skema (JSON-LD) genbruges på alle sider og knytter brandet til YouTube + Facebook
+ORG = {
+    "@type": "Organization",
+    "@id": SITE_URL + "/#org",
+    "name": "Broke to Wealth",
+    "url": SITE_URL + "/",
+    "logo": {"@type": "ImageObject", "url": SITE_URL + "/img/logo.png"},
+    "sameAs": [CHANNEL, FACEBOOK],
+}
+
+def jsonld(*objs):
+    data = {"@context": "https://schema.org", "@graph": list(objs)}
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + '</script>'
 
 # ── Indlæg ─────────────────────────────────────────────────────────────
 # video_id: YouTube-id (fra youtu.be/XXXX). Tom string -> viser thumbnail
@@ -118,12 +139,34 @@ POSTS = [
 ]
 
 # ── Skabeloner ─────────────────────────────────────────────────────────
-def head(title, desc, rel=""):
+def head(title, desc, rel="", path="", image="img/logo.png", og_type="website", ld=""):
+    canonical = SITE_URL + "/" + path
+    img_url = SITE_URL + "/" + image
+    t = esc(title); d = esc(desc)
     return f"""<!doctype html><html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{title}</title>
-<meta name="description" content="{desc}">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{t}</title>
+<meta name="description" content="{d}">
+<link rel="canonical" href="{canonical}">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#1faa3f">
+<link rel="icon" type="image/png" href="{rel}img/logo.png">
+<link rel="apple-touch-icon" href="{rel}img/logo.png">
+<meta property="og:type" content="{og_type}">
+<meta property="og:site_name" content="Broke to Wealth">
+<meta property="og:title" content="{t}">
+<meta property="og:description" content="{d}">
+<meta property="og:url" content="{canonical}">
+<meta property="og:image" content="{img_url}">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{t}">
+<meta name="twitter:description" content="{d}">
+<meta name="twitter:image" content="{img_url}">
+<link rel="preconnect" href="https://www.youtube.com">
 <link rel="stylesheet" href="{rel}style.css">
+{ld}
 </head><body>
 <header class="site"><div class="nav">
 <a class="brand" href="{rel}index.html"><img src="{rel}img/logo.png" alt="Broke to Wealth"><span><span class="b">Broke to</span> <span class="k">Wealth</span></span></a>
@@ -137,15 +180,12 @@ def footer(rel=""):
 <p class="disc">Broke to Wealth is educational content, not financial advice. Videos contain AI-assisted narration and illustrations. Do your own research before making money decisions.</p>
 </div></footer></body></html>"""
 
-def newsletter():
-    return """<div class="news">
-<h3>Get the money moves in your inbox</h3>
-<p>One short email a week. No spam, no fluff — just how the rich actually think, earn, and keep their money.</p>
-<form action="#" method="post" onsubmit="alert('Connect this form to your newsletter tool (Beehiiv / Mailchimp).');return false;">
-<input type="email" placeholder="you@email.com" required>
-<button type="submit">Join free</button>
-</form>
-<small>Unsubscribe anytime.</small></div>"""
+def subscribe():
+    return f"""<div class="sub">
+<h3>Subscribe to Broke to Wealth on YouTube</h3>
+<p>New no-fluff breakdowns of money psychology, investing, and how the wealthy actually think — every week. Hit subscribe so the next one finds you.</p>
+<a class="btn-yt" href="{SUB}" target="_blank" rel="noopener">▶ Subscribe on YouTube</a>
+<small>Free · new video every week.</small></div>"""
 
 def video_block(p, rel=""):
     if p["video_id"]:
@@ -155,7 +195,7 @@ def video_block(p, rel=""):
 def cta():
     return f"""<div class="cta"><h3>Watch the full breakdown on YouTube</h3>
 <p>New videos every week. Subscribe so the algorithm stops hiding us.</p>
-<a class="btn" href="{CHANNEL}" target="_blank" rel="noopener">▶ Subscribe on YouTube</a></div>"""
+<a class="btn" href="{SUB}" target="_blank" rel="noopener">▶ Subscribe on YouTube</a></div>"""
 
 # ── Byg ────────────────────────────────────────────────────────────────
 def build_index():
@@ -165,25 +205,39 @@ def build_index():
 <img src="img/{p['img']}" alt="{p['title']}">
 <div class="body"><h3>{p['title']}</h3><p>{p['excerpt']}</p>
 <span class="more">Read more →</span></div></a>\n"""
-    html = head("Broke to Wealth — How the rich actually think, earn & keep money",
-                "Short, no-fluff breakdowns of money psychology, AI, and wealth. New videos every week.")
-    html += f"""<div class="hero"><img src="img/logo.png" alt="Broke to Wealth">
+    desc = ("No-fluff breakdowns of money psychology, personal finance, and how the rich "
+            "think, earn, and keep their money. New videos every week on YouTube.")
+    ld = jsonld(ORG, {
+        "@type": "WebSite", "@id": SITE_URL + "/#website", "name": "Broke to Wealth",
+        "url": SITE_URL + "/", "publisher": {"@id": SITE_URL + "/#org"},
+        "inLanguage": "en", "description": desc,
+    })
+    html = head("Broke to Wealth — Money Psychology & Wealth-Building Habits", desc,
+                path="", image="img/logo.png", og_type="website", ld=ld)
+    html += f"""<div class="hero"><img src="img/logo.png" alt="Broke to Wealth logo">
 <h1>Broke to <span class="k">Wealth</span></h1>
 <p class="tag">The money moves they never taught you.</p>
-<p class="intro">No-fluff breakdowns of money psychology, AI, and how the wealthy actually think, earn, and keep their money. Watch the videos, read the recaps.</p></div>
-<div class="wrap">{newsletter()}
+<p class="intro">No-fluff breakdowns of money psychology, personal finance, and how the wealthy actually think, earn, and keep their money. Watch the videos, read the recaps, and subscribe on YouTube.</p></div>
+<div class="wrap">{subscribe()}
 <div class="section-title">Latest episodes</div>
 <div class="grid">{cards}</div></div>{footer()}"""
     (SITE/"index.html").write_text(html, encoding="utf-8")
 
 def build_about():
-    html = head("About — Broke to Wealth", "What Broke to Wealth is about.", )
+    desc = ("Broke to Wealth breaks down money psychology, personal finance, and the habits "
+            "that separate the broke from the wealthy. New videos every week on YouTube.")
+    ld = jsonld(ORG, {
+        "@type": "AboutPage", "url": SITE_URL + "/about.html",
+        "name": "About — Broke to Wealth", "isPartOf": {"@id": SITE_URL + "/#website"},
+        "about": {"@id": SITE_URL + "/#org"},
+    })
+    html = head("About — Broke to Wealth", desc, path="about.html", og_type="website", ld=ld)
     html += f"""<div class="wrap"><article>
 <h1>About Broke to Wealth</h1>
 <p>Most people spend their whole lives broke — not because they don't work hard, but because nobody taught them how money actually works.</p>
 <p><b>Broke to Wealth</b> breaks down the money moves, mindset shifts, and habits that separate the broke from the wealthy. No hype. No get-rich-quick schemes. Just the stuff they never taught you in school — explained simply, in a few minutes.</p>
 <p>New videos every week on <a href="{CHANNEL}" target="_blank" rel="noopener">YouTube</a>. Each post here is the written companion to a video.</p>
-{newsletter()}
+{subscribe()}
 <div class="disclaimer">⚠️ Broke to Wealth is for education and entertainment only — it is not financial advice. Content includes AI-assisted narration and illustrations.</div>
 </article></div>{footer()}"""
     (SITE/"about.html").write_text(html, encoding="utf-8")
@@ -192,7 +246,20 @@ def build_posts():
     for i,p in enumerate(POSTS):
         prev_l = f'<a href="{POSTS[i-1]["slug"]}.html">← {POSTS[i-1]["title"][:28]}…</a>' if i>0 else '<a href="../index.html">← All posts</a>'
         next_l = f'<a href="{POSTS[i+1]["slug"]}.html">{POSTS[i+1]["title"][:28]}… →</a>' if i<len(POSTS)-1 else '<a href="../index.html">All posts →</a>'
-        html = head(p["title"]+" — Broke to Wealth", p["excerpt"], rel="../")
+        canonical = SITE_URL + f"/posts/{p['slug']}.html"
+        ld = jsonld(ORG, {
+            "@type": "BlogPosting",
+            "headline": p["title"],
+            "description": p["excerpt"],
+            "image": SITE_URL + "/img/" + p["img"],
+            "url": canonical,
+            "mainEntityOfPage": canonical,
+            "inLanguage": "en",
+            "author": {"@id": SITE_URL + "/#org"},
+            "publisher": {"@id": SITE_URL + "/#org"},
+        })
+        html = head(p["title"]+" — Broke to Wealth", p["excerpt"], rel="../",
+                    path=f"posts/{p['slug']}.html", image="img/"+p["img"], og_type="article", ld=ld)
         html += f"""<div class="wrap"><article>
 <h1>{p['title']}</h1>
 <div class="meta">{p['date']} · Broke to Wealth</div>
@@ -202,9 +269,20 @@ def build_posts():
 <div class="disclaimer">⚠️ Educational only, not financial advice.</div>
 <div class="backlinks">{prev_l}{next_l}</div>
 </article>
-{newsletter()}
+{subscribe()}
 </div>{footer(rel="../")}"""
         (SITE/"posts"/f"{p['slug']}.html").write_text(html, encoding="utf-8")
 
-build_index(); build_about(); build_posts()
-print(f"✅ Bygget: index.html, about.html + {len(POSTS)} indlæg")
+def build_sitemap():
+    urls = [SITE_URL + "/", SITE_URL + "/about.html"] + [SITE_URL + f"/posts/{p['slug']}.html" for p in POSTS]
+    body = "".join(f"\n  <url><loc>{u}</loc><changefreq>weekly</changefreq></url>" for u in urls)
+    xml = ('<?xml version="1.0" encoding="UTF-8"?>\n'
+           '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + body + "\n</urlset>\n")
+    (SITE/"sitemap.xml").write_text(xml, encoding="utf-8")
+
+def build_robots():
+    txt = "User-agent: *\nAllow: /\n\nSitemap: " + SITE_URL + "/sitemap.xml\n"
+    (SITE/"robots.txt").write_text(txt, encoding="utf-8")
+
+build_index(); build_about(); build_posts(); build_sitemap(); build_robots()
+print(f"✅ Bygget: index.html, about.html + {len(POSTS)} indlæg + sitemap.xml + robots.txt")
